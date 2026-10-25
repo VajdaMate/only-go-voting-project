@@ -1,0 +1,141 @@
+
+services:
+  orderer.voting.com:
+    container_name: orderer.voting.com
+    image: hyperledger/fabric-orderer:1.4.12
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/fabric/genesisblock
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/fabric/msp
+      - ORDERER_GENERAL_TLS_ENABLED=false
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+      - ./genesisblock:/etc/hyperledger/fabric/genesisblock
+      - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
+      - ./crypto-config/ordererOrganizations/voting.com/orderers/orderer.voting.com/msp:/etc/hyperledger/fabric/msp
+    ports:
+      - 7050:7050
+
+  peer0.org1.voting.com:
+    container_name: peer0.org1.voting.com
+    image: hyperledger/fabric-peer:1.4.12
+    environment:
+      - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=only-go-voting-project_default
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.org1.voting.com
+      - CORE_PEER_ADDRESS=peer0.org1.voting.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.voting.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.voting.com:7051
+    volumes:
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - ./crypto-config/peerOrganizations/org1.voting.com/peers/peer0.org1.voting.com/msp:/etc/hyperledger/fabric/msp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 7051:7051
+
+  peer1.org1.voting.com:
+    container_name: peer1.org1.voting.com
+    image: hyperledger/fabric-peer:1.4.12
+    environment:
+      - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=only-go-voting-project_default
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer1.org1.voting.com
+      - CORE_PEER_ADDRESS=peer1.org1.voting.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.voting.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.voting.com:7051
+    volumes:
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - ./crypto-config/peerOrganizations/org1.voting.com/peers/peer1.org1.voting.com/msp:/etc/hyperledger/fabric/msp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8051:7051
+
+  peer2.org1.voting.com:
+    container_name: peer2.org1.voting.com
+    image: hyperledger/fabric-peer:1.4.12
+    environment:
+      - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=only-go-voting-project_default
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer2.org1.voting.com
+      - CORE_PEER_ADDRESS=peer2.org1.voting.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer2.org1.voting.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.voting.com:7051
+    volumes:
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - ./crypto-config/peerOrganizations/org1.voting.com/peers/peer2.org1.voting.com/msp:/etc/hyperledger/fabric/msp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9051:7051
+
+  peer3.org1.voting.com:
+    container_name: peer3.org1.voting.com
+    image: hyperledger/fabric-peer:1.4.12
+    environment:
+      - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=only-go-voting-project_default
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer3.org1.voting.com
+      - CORE_PEER_ADDRESS=peer3.org1.voting.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer3.org1.voting.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.voting.com:7051
+    volumes:
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - ./crypto-config/peerOrganizations/org1.voting.com/peers/peer3.org1.voting.com/msp:/etc/hyperledger/fabric/msp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 10051:7051
+
+  peer4.org1.voting.com:
+    container_name: peer4.org1.voting.com
+    image: hyperledger/fabric-peer:1.4.12
+    environment:
+      - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=only-go-voting-project_default
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer4.org1.voting.com
+      - CORE_PEER_ADDRESS=peer4.org1.voting.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer4.org1.voting.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.voting.com:7051
+    volumes:
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - ./crypto-config/peerOrganizations/org1.voting.com/peers/peer4.org1.voting.com/msp:/etc/hyperledger/fabric/msp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 11051:7051
+
+  peer5.org1.voting.com:
+    container_name: peer5.org1.voting.com
+    image: hyperledger/fabric-peer:1.4.12
+    environment:
+      - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=only-go-voting-project_default
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer5.org1.voting.com
+      - CORE_PEER_ADDRESS=peer5.org1.voting.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer5.org1.voting.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.voting.com:7051
+    volumes:
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - ./crypto-config/peerOrganizations/org1.voting.com/peers/peer5.org1.voting.com/msp:/etc/hyperledger/fabric/msp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 12051:7051

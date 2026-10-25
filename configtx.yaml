@@ -1,0 +1,141 @@
+---
+################################################################################
+#
+#   ORGANIZATIONS
+#
+################################################################################
+Organizations:
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: crypto-config/ordererOrganizations/voting.com/msp
+        Policies:
+            Readers: { Type: Signature, Rule: "OR('OrdererMSP.member')" }
+            Writers: { Type: Signature, Rule: "OR('OrdererMSP.member')" }
+            Admins:  { Type: Signature, Rule: "OR('OrdererMSP.admin')" }
+
+    - &Org1
+        Name: Org1MSP
+        ID: Org1MSP
+        MSPDir: crypto-config/peerOrganizations/org1.voting.com/msp
+        Policies:
+            # Change from 'admin'/'peer' to 'member' to avoid policy failures
+            Readers: { Type: Signature, Rule: "OR('Org1MSP.member')" }
+            Writers: { Type: Signature, Rule: "OR('Org1MSP.member')" }
+            Admins:  { Type: Signature, Rule: "OR('Org1MSP.admin')" }
+            Endorsement: { Type: Signature, Rule: "OR('Org1MSP.member')" }
+
+################################################################################
+#
+#   CAPABILITIES
+#
+################################################################################
+Capabilities:
+    Channel: &ChannelCapabilities
+        V1_4_2: true     
+    Orderer: &OrdererCapabilities
+        V1_4_2: true     
+    Application: &ApplicationCapabilities
+        V1_4_2: true     
+
+################################################################################
+#
+#   APPLICATION
+#
+################################################################################
+Application: &ApplicationDefaults
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+################################################################################
+#
+#   ORDERER
+#
+################################################################################
+Orderer: &OrdererDefaults
+    OrdererType: solo
+    
+    Addresses:
+        - orderer.voting.com:7050
+    BatchTimeout: 1s
+    BatchSize:
+        MaxMessageCount: 100
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 2 MB
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+################################################################################
+#
+#   CHANNEL (The Missing Section)
+#
+################################################################################
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+################################################################################
+#
+#   PROFILES
+#
+################################################################################
+Profiles:
+    VotingGenesis:
+        <<: *ChannelDefaults  # <--- CRITICAL FIX
+        Orderer:
+            <<: *OrdererDefaults
+            Capabilities:
+                <<: *OrdererCapabilities
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+
+    VotingChannel:
+        Consortium: SampleConsortium
+        <<: *ChannelDefaults  # <--- CRITICAL FIX
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1

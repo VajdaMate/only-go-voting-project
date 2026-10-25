@@ -1,0 +1,124 @@
+version: 1.0.0
+client:
+  organization: Org1
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+
+channels:
+  mychannel:
+    peers:
+      peer0.org1.voting.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer1.org1.voting.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer2.org1.voting.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer3.org1.voting.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer4.org1.voting.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer5.org1.voting.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+organizations:
+  Org1:
+    mspid: Org1MSP
+    cryptoPath: ../crypto-config/peerOrganizations/org1.voting.com/users/Admin@org1.voting.com/msp
+    peers:
+      - peer0.org1.voting.com
+      - peer1.org1.voting.com
+      - peer2.org1.voting.com
+      - peer3.org1.voting.com
+      - peer4.org1.voting.com
+      - peer5.org1.voting.com
+
+orderers:
+  orderer.voting.com:
+    url: grpc://localhost:7050
+    grpcOptions:
+      ssl-target-name-override: orderer.voting.com
+      grpc-max-send-message-length: 15
+
+peers:
+  peer0.org1.voting.com:
+    url: grpc://localhost:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.org1.voting.com
+      grpc.keepalive_time_ms: 600000
+  peer1.org1.voting.com:
+    url: grpc://localhost:8051
+    grpcOptions:
+      ssl-target-name-override: peer1.org1.voting.com
+      grpc.keepalive_time_ms: 600000
+  peer2.org1.voting.com:
+    url: grpc://localhost:9051
+    grpcOptions:
+      ssl-target-name-override: peer2.org1.voting.com
+      grpc.keepalive_time_ms: 600000
+  peer3.org1.voting.com:
+    url: grpc://localhost:10051
+    grpcOptions:
+      ssl-target-name-override: peer3.org1.voting.com
+      grpc.keepalive_time_ms: 600000
+  peer4.org1.voting.com:
+    url: grpc://localhost:11051
+    grpcOptions:
+      ssl-target-name-override: peer4.org1.voting.com
+      grpc.keepalive_time_ms: 600000
+  peer5.org1.voting.com:
+    url: grpc://localhost:12051
+    grpcOptions:
+      ssl-target-name-override: peer5.org1.voting.com
+      grpc.keepalive_time_ms: 600000
+
+entityMatchers:
+  peer:
+    - pattern: peer0.org1.voting.com.*
+      urlSubstitutionExp: grpc://localhost:7051
+      sslTargetOverrideUrlSubstitutionExp: peer0.org1.voting.com
+      mappedHost: peer0.org1.voting.com
+    - pattern: peer1.org1.voting.com.*
+      urlSubstitutionExp: grpc://localhost:8051
+      sslTargetOverrideUrlSubstitutionExp: peer1.org1.voting.com
+      mappedHost: peer1.org1.voting.com
+    - pattern: peer2.org1.voting.com.*
+      urlSubstitutionExp: grpc://localhost:9051
+      sslTargetOverrideUrlSubstitutionExp: peer2.org1.voting.com
+      mappedHost: peer2.org1.voting.com
+    - pattern: peer3.org1.voting.com.*
+      urlSubstitutionExp: grpc://localhost:10051
+      sslTargetOverrideUrlSubstitutionExp: peer3.org1.voting.com
+      mappedHost: peer3.org1.voting.com
+    - pattern: peer4.org1.voting.com.*
+      urlSubstitutionExp: grpc://localhost:11051
+      sslTargetOverrideUrlSubstitutionExp: peer4.org1.voting.com
+      mappedHost: peer4.org1.voting.com
+    - pattern: peer5.org1.voting.com.*
+      urlSubstitutionExp: grpc://localhost:12051
+      sslTargetOverrideUrlSubstitutionExp: peer5.org1.voting.com
+      mappedHost: peer5.org1.voting.com
+  orderer:
+    - pattern: orderer.voting.com.*
+      urlSubstitutionExp: grpc://localhost:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.voting.com
+      mappedHost: orderer.voting.com
