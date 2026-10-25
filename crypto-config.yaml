@@ -8,6 +8,6 @@ PeerOrgs:
   - Name: Org1
     Domain: org1.voting.com
     Template:
-      Count: 6 # This creates certificates for your 4 Validation Nodes
+      Count: 6
     Users:
       Count: 1
